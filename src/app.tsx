@@ -12,7 +12,7 @@ export default function App() {
     <Router
       root={(props) => (
         <MetaProvider>
-          <Title>Umbrella</Title>
+          <Title>Usan</Title>
           <Suspense>
             <SessionProvider>
               <Layout>

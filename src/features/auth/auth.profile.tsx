@@ -4,9 +4,7 @@ import { AuthSignout } from "./auth.signout"
 import { useAuth } from "@solid-mediakit/auth/client"
 
 export const AuthProfile = () => {
-
   const auth = useAuth()
-
 
   return (
     <Switch>
@@ -14,17 +12,16 @@ export const AuthProfile = () => {
         <AuthSignin />
       </Match>
       <Match when={auth.status() === "authenticated"}>
-
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-6">
+          <AuthSignout />
           <div>
             <div class="flex items-center gap-2">
               <img src={auth.session()?.user?.image || ""} alt="Avatar" class="w-8 h-8 rounded-full" />
-              <p>{auth.session()?.user?.name}</p>
+              <p class="m-0">{auth.session()?.user?.name}</p>
             </div>
           </div>
-          <AuthSignout />
         </div>
       </Match>
-    </Switch>)
-
+    </Switch>
+  )
 }
