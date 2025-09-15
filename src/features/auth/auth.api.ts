@@ -27,6 +27,7 @@ export const authOptions: SolidAuthConfig = {
   callbacks: {
     async session({ session, token }) {
 
+
       const picture = token?.picture
       if (!picture) throw new Error('No picture')
       const providerId = picture.split('/')[picture.split('/').length - 2]

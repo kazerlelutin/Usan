@@ -10,9 +10,11 @@ export const serverScheme = z.object({
   AUTH_TRUST_HOST: z.string().optional(),
   AUTH_URL: z.string().optional(),
   DATABASE_URL: z.string(),
+  ENCRYPTION_KEY: z.string(),
 });
 
 export const clientScheme = z.object({
   MODE: z.enum(['development', 'production', 'test']).default('development'),
   VITE_AUTH_PATH: z.string().optional(),
+  VITE_ENTITY_NAME: z.string().optional(),
 });
