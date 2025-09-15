@@ -27,8 +27,6 @@ export const activityLogPOST = async ({ request }: { request: Request }) => {
   const body = await request.json();
   const { content, action, complaintId } = body;
 
-  console.log('Activity log POST - Action reçue:', action);
-  console.log('Activity log POST - Complaint ID:', complaintId);
 
   if (!action || !complaintId) {
     return Response.json({
@@ -36,7 +34,6 @@ export const activityLogPOST = async ({ request }: { request: Request }) => {
     }, { status: 400 });
   }
 
-  // Vérifier si la plainte existe
   const complaint = await db.query.complaints.findFirst({
     where: eq(complaints.id, complaintId),
   });
@@ -52,7 +49,7 @@ export const activityLogPOST = async ({ request }: { request: Request }) => {
 
   let activityLogId = '';
   try {
-    // Insérer l'activité
+
     const [newActivityLog] = await db.insert(activityLogs).values({
       complaintId: complaintId || '',
       encryptedContent: await encrypt(htmlContent || ''),
@@ -62,15 +59,11 @@ export const activityLogPOST = async ({ request }: { request: Request }) => {
       actorName: session.user?.name,
     }).$returningId();
     activityLogId = newActivityLog.id;
-    // Mettre à jour le statut de la plainte si nécessaire
-    // Extraire la valeur de l'action (format: "type:value" -> "value")
+
     const actionValue = action.includes(':') ? action.split(':')[1] : action;
-    console.log('Vérification changement de statut pour action:', action, '-> valeur:', actionValue);
-    console.log('shouldAutoChangeStatus:', shouldAutoChangeStatus(actionValue));
 
     if (shouldAutoChangeStatus(actionValue)) {
       const newStatus = getNewStatusForAction(actionValue);
-      console.log('Nouveau statut à appliquer:', newStatus);
 
       if (newStatus) {
         await db.update(complaints)
@@ -79,10 +72,7 @@ export const activityLogPOST = async ({ request }: { request: Request }) => {
             updatedAt: new Date()
           })
           .where(eq(complaints.id, complaintId));
-        console.log('Statut mis à jour vers:', newStatus);
       }
-    } else {
-      console.log('Aucun changement de statut automatique pour cette action');
     }
   } catch (error) {
     console.error('Erreur lors de l\'enregistrement de l\'activité:', error);
