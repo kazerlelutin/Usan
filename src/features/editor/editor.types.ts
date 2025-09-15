@@ -7,6 +7,7 @@ export interface EditorContent {
 
 // Configuration de l'éditeur
 export interface EditorConfig {
+  id?: string;
   placeholder?: string;
   minHeight?: number;
   maxImageSize?: number; // en MB

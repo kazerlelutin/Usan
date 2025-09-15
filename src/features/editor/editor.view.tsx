@@ -1,5 +1,5 @@
 
-import { Show, createEffect } from 'solid-js';
+import { Show, createEffect, createMemo } from 'solid-js';
 import type { EditorConfig, EditorCallbacks, EditorData } from './editor.types';
 import { useEditor } from './editor.hook';
 
@@ -11,10 +11,13 @@ interface EditorViewProps {
 }
 
 export const EditorView = (props: EditorViewProps) => {
+  const editorId = createMemo(() => `editorjs-${Math.random().toString(36).substr(2, 9)}`);
+
   const { isClient, isReady, error, setEditorData } = useEditor(
     props.config,
     props.callbacks,
-    props.initialData || null
+    props.initialData || null,
+    editorId()
   );
 
   createEffect(() => {
@@ -43,7 +46,7 @@ export const EditorView = (props: EditorViewProps) => {
           }
         >
           <div
-            id="editorjs"
+            id={editorId()}
             class="min-h-[200px]"
             style={{ opacity: isReady() ? 1 : 0.5 }}
           />

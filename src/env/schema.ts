@@ -11,6 +11,7 @@ export const serverScheme = z.object({
   AUTH_URL: z.string().optional(),
   DATABASE_URL: z.string(),
   ENCRYPTION_KEY: z.string(),
+  DISCORD_WEBHOOK_COMPLAINT: z.string(),
 });
 
 export const clientScheme = z.object({

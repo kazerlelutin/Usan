@@ -11,7 +11,6 @@ const Admin = () => {
         <div class="grid grid-rows-[auto_1fr]">
           <h1 class="text-center">Suivi des signalements</h1>
           <ComplaintsListView />
-
         </div>
       </Show>
       <Show when={!session()?.user?.roles?.some(role => role.name.match(/inspector|judge/i))}>

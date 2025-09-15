@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { encrypt } from '~/utils/encryption';
 import { db } from '~/database';
 import { complaints, activityLogs, COMPLAINT_STATUS, ACTIVITY_ACTIONS, ACTOR_TYPES } from '~/database/schema';
+import { serverEnv } from '~/env/server';
 
 export const complaintsPOST = async ({ request }: { request: Request }) => {
   let body;
@@ -42,12 +43,7 @@ export const complaintsPOST = async ({ request }: { request: Request }) => {
       status: COMPLAINT_STATUS.SUBMITTED
     }).$returningId();
 
-
-    const activityContent = JSON.stringify({
-      action: ACTIVITY_ACTIONS.SUBMITTED,
-      details: await encrypt('Nouvelle plainte créée par le plaignant')
-    });
-
+    const activityContent = `<p>Nouvelle plainte créée par le plaignant</p>`;
 
     await db.insert(activityLogs).values({
       complaintId: newComplaint.id,
@@ -55,6 +51,23 @@ export const complaintsPOST = async ({ request }: { request: Request }) => {
       actorType: ACTOR_TYPES.COMPLAINANT,
       actorName: 'Plaignant',
       encryptedContent: await encrypt(activityContent)
+    });
+
+    // Send to Discord
+    const origin = new URL(request.url).origin;
+    const link = `${origin}/admin/${complaintId}`;
+
+    await fetch(serverEnv.DISCORD_WEBHOOK_COMPLAINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: 'Nouvelle plainte créée :\n',
+        embeds: [{
+          title: 'Nouvelle plainte',
+          description: `Lien admin: ${link}`,
+          url: link
+        }]
+      })
     });
 
     return Response.json({

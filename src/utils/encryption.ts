@@ -14,7 +14,6 @@ export async function encrypt(text: string): Promise<string> {
   const key = await scryptAsync(serverEnv.ENCRYPTION_KEY || 'default-key-change-me', 'salt', 32) as Buffer;
   const iv = randomBytes(16);
 
-  // Compresser d'abord pour réduire la taille
   const textBuffer = Buffer.from(text, 'utf8');
   const compressed = await gzipAsync(textBuffer);
 
@@ -34,12 +33,6 @@ export async function decrypt(encryptedData: string): Promise<string> {
   const algorithm = 'aes-256-gcm';
   const key = await scryptAsync(serverEnv.ENCRYPTION_KEY || 'default-key-change-me', 'salt', 32) as Buffer;
 
-  console.log('Déchiffrement - données reçues:', {
-    length: encryptedData.length,
-    hasColons: encryptedData.includes(':'),
-    parts: encryptedData.split(':').length
-  });
-
   const parts = encryptedData.split(':');
   if (parts.length !== 3) {
     throw new Error(`Format de données invalide. Attendu: iv:authTag:encrypted, reçu: ${parts.length} parties`);
@@ -50,12 +43,6 @@ export async function decrypt(encryptedData: string): Promise<string> {
   const authTag = Buffer.from(authTagHex, 'hex');
   const encryptedBuffer = Buffer.from(encrypted, 'hex');
 
-  console.log('Déchiffrement - buffers:', {
-    ivLength: iv.length,
-    authTagLength: authTag.length,
-    encryptedLength: encryptedBuffer.length
-  });
-
   const decipher = createDecipheriv(algorithm, key, iv);
   decipher.setAAD(Buffer.from('complaint-data'));
   decipher.setAuthTag(authTag);
@@ -63,12 +50,10 @@ export async function decrypt(encryptedData: string): Promise<string> {
   let decrypted = decipher.update(encryptedBuffer);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-  // Essayer de décompresser (nouveau format), sinon retourner tel quel (ancien format)
   try {
     const decompressed = await gunzipAsync(decrypted);
     return decompressed.toString('utf8');
   } catch (error) {
-    // Si la décompression échoue, c'est l'ancien format
     return decrypted.toString('utf8');
   }
 }

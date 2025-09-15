@@ -2,6 +2,7 @@ import { Pagination } from "~/ui/pagination/pagination";
 import { Status } from "~/ui/Status/Status";
 import { useComplaintsList } from "./complaints-list.hook";
 import { For, Show } from "solid-js";
+import { A } from "@solidjs/router";
 
 export const ComplaintsListView = () => {
   const { complaints, loading, error, total, fetchComplaints } = useComplaintsList();
@@ -23,7 +24,7 @@ export const ComplaintsListView = () => {
             <div class="flex flex-col gap-4 p-4">
               <For each={complaints()}>
                 {(complaint) => (
-                  <div class="grid grid-cols-3 gap-4 items-center">
+                  <A href={`/admin/${complaint.id}`} class="grid grid-cols-3 gap-4 items-center">
                     <div class="text-left truncate">{complaint.id}</div>
                     <div class="text-center">{new Date(complaint.updatedAt).toLocaleDateString('fr-FR', {
                       day: '2-digit',
@@ -35,7 +36,7 @@ export const ComplaintsListView = () => {
                     <div class="text-right">
                       <Status status={complaint.status} class="justify-end" />
                     </div>
-                  </div>
+                  </A>
                 )}
               </For>
             </div>
