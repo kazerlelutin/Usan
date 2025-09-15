@@ -18,10 +18,13 @@ const STATUS_COLORS = {
 
 export const FileTrackingView = (props: { code: string }) => {
 
-  const { loading, error, data } = useGetFileTracking(props.code);
+  const { loading, error, data, notFound } = useGetFileTracking(props.code);
   return (
     <div class="w-full h-full p-4">
       <Suspense fallback={<div class="text-center flex h-full items-center justify-center">Chargement...</div>}>
+        <Show when={notFound()}>
+          <div class="text-center flex h-full items-center justify-center font-bold">Signalement non trouvé</div>
+        </Show>
         <Show when={loading()}>
           <div class="text-center flex h-full items-center justify-center">Chargement...</div>
         </Show>
