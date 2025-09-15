@@ -163,14 +163,83 @@ yarn test:coverage # Tests avec couverture
 ## 🎯 Features implémentées
 
 - ✅ **Auth** : Authentification Discord complète avec rôles
-- 🔄 **Complaints** : Système de plaintes (en cours)
-- 🔄 **Members** : Gestion des membres (en cours)
-- 🔄 **Events** : Événements (en cours)
-- 🔄 **Newsletter** : Newsletter (en cours)
-- 🔄 **Donations** : Dons (en cours)
-- 🔄 **Collection** : Collection (en cours)
-- 🔄 **Content Management** : Gestion vidéos (en cours)
-- 🔄 **AG Management** : Assemblées Générales (en cours)
+- ✅ **Complaints** : Système de plaintes complet et fonctionnel
+
+## 📋 Système de Plaintes - Guide Utilisateur
+
+### 🏠 Pour les Plaignants
+
+#### 1. Déposer une plainte
+
+- Accédez à la page d'accueil
+- Rédigez votre plainte dans l'éditeur de texte
+- Cliquez sur "Soumettre"
+- **Important** : Notez votre code de suivi unique !
+
+#### 2. Suivre votre plainte
+
+- Utilisez votre code de suivi pour accéder à `/complaints/[votre-code]`
+- Consultez l'historique des étapes
+- Vérifiez le statut actuel de votre plainte
+
+#### 3. Statuts possibles
+
+- **Soumis** : Votre plainte a été reçue
+- **En cours d'enquête** : Un inspecteur traite votre dossier
+- **En attente de jugement** : Une recommandation a été faite, en attente de décision
+- **Fermé** : Décision finale prise
+
+### 👨‍💼 Pour les Inspecteurs
+
+#### 1. Accès à l'interface admin
+
+- Connectez-vous avec votre compte Discord ayant le rôle "inspector"
+- Accédez à `/admin` pour voir la liste des plaintes
+
+#### 2. Actions disponibles
+
+- **Ajouter une note** : Documenter vos investigations
+- **Faire une recommandation** : Proposer une décision
+- **Changer le statut** : Passer en "En cours d'enquête" ou "En attente de jugement"
+
+#### 3. Workflow recommandé
+
+1. Consultez la plainte et son historique
+2. Ajoutez des notes sur vos investigations
+3. Faites une recommandation si nécessaire
+4. Le statut se met à jour automatiquement
+
+### ⚖️ Pour les Juges
+
+#### 1. Accès restreint
+
+- Connectez-vous avec votre compte Discord ayant le rôle "judge"
+- Vous ne voyez que les plaintes "En attente de jugement" ou "Fermées"
+
+#### 2. Actions disponibles
+
+- **Ajouter une note** : Documenter votre analyse
+- **Prendre une décision** : Décision finale sur la plainte
+- **Changer le statut** : Passer en "Fermé" après décision
+
+#### 3. Workflow recommandé
+
+1. Consultez la plainte et la recommandation de l'inspecteur
+2. Ajoutez votre analyse si nécessaire
+3. Prenez une décision finale
+4. Le statut passe automatiquement à "Fermé"
+
+### 🔒 Sécurité et Confidentialité
+
+- **Chiffrement** : Toutes les plaintes sont chiffrées avant stockage
+- **Accès contrôlé** : Seuls les rôles autorisés peuvent accéder aux interfaces
+- **Traçabilité** : Toutes les actions sont enregistrées avec horodatage
+- **Immutabilité** : Les activités ne peuvent pas être modifiées après création
+
+### 📱 Notifications
+
+- **Discord** : Les nouvelles activités sont notifiées via webhook Discord
+- **Liens directs** : Chaque notification contient un lien vers la plainte concernée
 
 ## 🤝 Contribution
 

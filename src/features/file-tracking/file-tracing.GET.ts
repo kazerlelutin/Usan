@@ -1,6 +1,6 @@
 import { db } from "~/database";
 import { eq } from "drizzle-orm";
-import { complaints } from "~/database/schema";
+import { complaints, activityLogs } from "~/database/schema";
 import { decrypt } from "~/utils/encryption";
 
 export const fileTracingGET = async ({ params }: { request: Request, params: { code: string } }) => {
@@ -32,11 +32,30 @@ export const fileTracingGET = async ({ params }: { request: Request, params: { c
 
   const decryptedContent = await decrypt(data.encryptedContent);
 
+  // Récupérer les activités liées à cette plainte
+  const activities = await db.query.activityLogs.findMany({
+    where: eq(activityLogs.complaintId, data.id),
+    orderBy: (activityLogs, { asc }) => [asc(activityLogs.createdAt)],
+  });
+
+  // Déchiffrer le contenu des activités
+  const decryptedActivities = await Promise.all(
+    activities.map(async (activity) => ({
+      id: activity.id,
+      action: activity.action,
+      actorType: activity.actorType,
+      actorName: activity.actorName,
+      createdAt: activity.createdAt,
+      decryptedContent: await decrypt(activity.encryptedContent),
+    }))
+  );
+
   return Response.json({
     content: decryptedContent,
     id: data.id,
     status: data.status,
     createdAt: data.createdAt,
     updatedAt: data.updatedAt,
+    activities: decryptedActivities,
   });
 };

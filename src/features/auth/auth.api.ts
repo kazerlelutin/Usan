@@ -9,6 +9,7 @@ declare module "@auth/core/types" {
   export interface Session {
     user?: DefaultSession["user"] & {
       providerId?: string;
+      roles?: { name: string, color: number }[];
     };
   }
 }

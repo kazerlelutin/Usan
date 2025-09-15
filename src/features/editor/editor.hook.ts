@@ -7,7 +7,8 @@ import type { OutputData } from '@editorjs/editorjs';
 export const useEditor = (
   config: EditorConfig = {},
   callbacks: EditorCallbacks = {},
-  initialData?: EditorData | null
+  initialData?: EditorData | null,
+  editorId?: string
 ) => {
   const [editor, setEditor] = createSignal<EditorJS | null>(null);
   const [isClient, setIsClient] = createSignal(false);
@@ -15,6 +16,7 @@ export const useEditor = (
   const [error, setError] = createSignal<string | null>(null);
 
   const defaultConfig: EditorConfig = {
+    id: 'editorjs',
     placeholder: 'Commencez à écrire...',
     minHeight: 200,
     maxImageSize: 5,
@@ -176,13 +178,11 @@ export const useEditor = (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tools: Record<string, any> = {};
 
-      // L'outil paragraph est intégré par défaut dans EditorJS
-      // Pas besoin de l'importer explicitement
-      // Mais on peut ajouter une configuration pour améliorer la validation
       tools.paragraph = {
+        id: finalConfig.id,
         inlineToolbar: true,
         config: {
-          placeholder: 'Commencez à écrire...'
+          placeholder: finalConfig.placeholder
         }
       };
 
@@ -261,7 +261,7 @@ export const useEditor = (
       }
 
       const editorInstance = new EditorJS({
-        holder: 'editorjs',
+        holder: editorId || 'editorjs',
         placeholder: finalConfig.placeholder,
         minHeight: finalConfig.minHeight,
         i18n: finalConfig.i18n,

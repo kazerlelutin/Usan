@@ -56,10 +56,10 @@ export const TemplateSelector = (props: TemplateSelectorProps) => {
                   data-[is-selected=false]:border-gray-200 data-[is-selected=false]:hover:border-gray-300`}
                   onClick={() => setSelectedTemplate(template.id)}
                 >
-                  <div class="flex items-start space-x-3">
+                  <div class="flex items-center space-x-3">
                     <div class="text-2xl">{template.icon}</div>
                     <div class="flex-1">
-                      <h3 class="font-semibold text-gray-900 mb-1">
+                      <h3 class="font-semibold text-gray-900 mb-1 m-0">
                         {template.title}
                       </h3>
                       <p class="text-sm text-gray-600">
